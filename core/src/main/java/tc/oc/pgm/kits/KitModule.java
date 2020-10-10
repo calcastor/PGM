@@ -2,6 +2,8 @@ package tc.oc.pgm.kits;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 import org.bukkit.inventory.ItemStack;
 import org.jdom2.Document;
@@ -19,9 +21,19 @@ import tc.oc.pgm.util.xml.InvalidXMLException;
 
 public class KitModule implements MapModule {
 
+  private Set<Kit> kits;
+
+  public KitModule(Set<Kit> kits) {
+    this.kits = kits;
+  }
+
+  public Set<Kit> getKits() {
+    return kits;
+  }
+
   @Override
   public MatchModule createMatchModule(Match match) {
-    return new KitMatchModule(match);
+    return new KitMatchModule(match, this);
   }
 
   @Override
@@ -39,12 +51,14 @@ public class KitModule implements MapModule {
     @Override
     public KitModule parse(MapFactory factory, Logger logger, Document doc)
         throws InvalidXMLException {
+      Set<Kit> kits = new HashSet<>();
       for (Element kitsElement : doc.getRootElement().getChildren("kits")) {
         for (Element kitElement : kitsElement.getChildren("kit")) {
-          factory.getKits().parse(kitElement);
+          Kit kit = factory.getKits().parse(kitElement);
+          kits.add(kit);
         }
       }
-      return new KitModule();
+      return new KitModule(kits);
     }
   }
 

@@ -32,10 +32,16 @@ import tc.oc.pgm.util.event.ItemTransferEvent;
 public class KitMatchModule implements MatchModule, Listener {
 
   private final Match match;
+  private KitModule module;
   private final SetMultimap<MatchPlayer, ArmorType> lockedArmorSlots = HashMultimap.create();
 
-  public KitMatchModule(Match match) {
+  public KitMatchModule(Match match, KitModule module) {
     this.match = match;
+    this.module = module;
+  }
+
+  public KitModule getModule() {
+    return module;
   }
 
   @Override
