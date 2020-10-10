@@ -54,7 +54,12 @@ public class ItemKit implements KitDefinition {
 
     if (force) {
       for (Entry<Slot, ItemStack> kitEntry : event.getSlotItems().entrySet()) {
-        kitEntry.getKey().putItem(holder, kitEntry.getValue().clone());
+        ItemStack stack = kitEntry.getValue().clone();
+        ItemKitAddItemEvent itemKitAddItemEvent =
+            new ItemKitAddItemEvent(player, kitEntry.getKey().getIndex(), stack);
+        player.getMatch().callEvent(itemKitAddItemEvent);
+
+        kitEntry.getKey().putItem(player, stack, itemKitAddItemEvent.getIndex());
       }
     } else {
       // Tools in the player's inv are repaired using matching tools in the kit with less damage
@@ -114,8 +119,12 @@ public class ItemKit implements KitDefinition {
         ItemStack kitStack = kitEntry.getValue();
 
         if (kitStack.getAmount() > 0) {
-          if (InventoryUtils.isNothing(kitSlot.getItem(holder))) {
-            kitSlot.putItem(holder, kitStack);
+          ItemStack stack = kitEntry.getValue().clone();
+          ItemKitAddItemEvent itemKitAddItemEvent =
+              new ItemKitAddItemEvent(player, kitSlot.getIndex(), stack);
+          player.getMatch().callEvent(itemKitAddItemEvent);
+          if (InventoryUtils.isNothing(kitSlot.getItem(holder, itemKitAddItemEvent.getIndex()))) {
+            kitSlot.putItem(player, kitStack, itemKitAddItemEvent.getIndex());
           } else {
             displacedItems.add(kitStack);
           }
