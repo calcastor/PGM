@@ -20,5 +20,6 @@ public final class FinishCommand {
     if (!match.finish(team instanceof Competitor ? (Competitor) team : null)) {
       throw exception("admin.end.unknownError");
     }
+    System.out.println("Match Finish B: " + match.getId());
   }
 }
