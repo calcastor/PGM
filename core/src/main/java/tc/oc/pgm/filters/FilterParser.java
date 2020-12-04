@@ -614,4 +614,9 @@ public abstract class FilterParser {
   public PlayerBlockQueryModifier parsePlayerFilter(Element el) throws InvalidXMLException {
     return new PlayerBlockQueryModifier(parseChild(el));
   }
+
+  @MethodParser("existed-pre-match")
+  public ExistedPreMatchFilter exitedPreMatch(Element el) throws InvalidXMLException {
+    return new ExistedPreMatchFilter();
+  }
 }
