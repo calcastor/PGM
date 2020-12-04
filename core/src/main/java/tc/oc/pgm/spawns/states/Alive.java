@@ -36,12 +36,17 @@ public class Alive extends Participating {
   public Alive(SpawnMatchModule smm, MatchPlayer player, Spawn spawn, Location location) {
     super(smm, player);
     this.spawn = spawn;
-    this.location = location;
+    this.location =
+        (options.bedSpawn && player.getBukkit().getBedSpawnLocation() != null
+            ? player.getBukkit().getBedSpawnLocation()
+            : location);
   }
 
   @Override
   public void enterState() {
     super.enterState();
+
+    if (!options.bedSpawn) bukkit.setBedSpawnLocation(null);
 
     player.reset();
     player.setDead(false);
