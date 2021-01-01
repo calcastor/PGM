@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.annotation.Nullable;
-import net.kyori.text.TranslatableComponent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -20,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.filter.Filter;
@@ -305,16 +303,6 @@ public class SpawnMatchModule implements MatchModule, Listener, Tickable {
       if (!spawn.attributes.persistent) {
         unique.remove(competitor);
       }
-    }
-  }
-
-  @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-  public void onBedEnter(final PlayerBedEnterEvent event) {
-    // Only block bed enter when bed spawns are disabled
-    if (match.getWorld().equals(event.getWorld()) && !getRespawnOptions().bedSpawn) {
-      event.setCancelled(true);
-      MatchPlayer who = match.getPlayer(event.getPlayer());
-      if (who != null) who.sendWarning(TranslatableComponent.of("match.disabled.bed"));
     }
   }
 
