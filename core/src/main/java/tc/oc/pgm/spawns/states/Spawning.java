@@ -25,7 +25,7 @@ public abstract class Spawning extends Participating {
 
   public Spawning(SpawnMatchModule smm, MatchPlayer player) {
     super(smm, player);
-    this.spawnRequested = options.auto;
+    this.spawnRequested = true;
   }
 
   @Override
