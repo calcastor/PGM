@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import tc.oc.pgm.api.match.MatchScope;
 import tc.oc.pgm.api.party.Competitor;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.api.player.ParticipantState;
 import tc.oc.pgm.events.PlayerJoinPartyEvent;
 import tc.oc.pgm.spawns.Spawn;
 import tc.oc.pgm.spawns.SpawnMatchModule;
@@ -34,15 +35,18 @@ public class Dead extends Spawning {
   private static final PotionEffect BLINDNESS_LONG =
       new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, true, false);
 
+  @Nullable private final ParticipantState killer;
   private final long deathTick;
   private boolean kitted, rotted;
 
-  public Dead(SpawnMatchModule smm, MatchPlayer player) {
-    this(smm, player, player.getMatch().getTick().tick);
+  public Dead(SpawnMatchModule smm, MatchPlayer player, @Nullable ParticipantState killer) {
+    this(smm, player, killer, player.getMatch().getTick().tick);
   }
 
-  public Dead(SpawnMatchModule smm, MatchPlayer player, long deathTick) {
+  public Dead(
+      SpawnMatchModule smm, MatchPlayer player, @Nullable ParticipantState killer, long deathTick) {
     super(smm, player);
+    this.killer = killer;
     this.deathTick = deathTick;
   }
 
@@ -141,6 +145,13 @@ public class Dead extends Spawning {
 
   @Override
   protected Component getTitle() {
+    if (killer != null && killer.getPlayer().isPresent()) {
+      MatchPlayer player = killer.getPlayer().get();
+      if (player.getDeathMessage() != null) {
+        return text(player.getDeathMessage());
+      }
+    }
+
     return translatable("deathScreen.title", NamedTextColor.RED);
   }
 

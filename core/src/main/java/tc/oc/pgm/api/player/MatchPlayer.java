@@ -245,6 +245,14 @@ public interface MatchPlayer extends Audience, Named, Tickable, InventoryHolder 
 
   AttributeInstance getAttribute(Attribute attribute);
 
+  String getKillMessage();
+
+  void setKillMessage(String killMessage);
+
+  String getDeathMessage();
+
+  void setDeathMessage(String deathMessage);
+
   /**
    * Get the {@link GameMode} of the {@link MatchPlayer}.
    *
