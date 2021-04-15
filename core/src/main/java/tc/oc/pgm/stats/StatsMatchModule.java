@@ -105,7 +105,7 @@ public class StatsMatchModule implements MatchModule, Listener {
             + absorptionHearts;
 
     if (damager != null) getPlayerStat(damager).onDamage(realFinalDamage, bow);
-    getPlayerStat(damaged).onDamaged(realFinalDamage);
+    if (damaged != null) getPlayerStat(damaged).onDamaged(realFinalDamage, bow);
   }
 
   @EventHandler
