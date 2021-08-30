@@ -245,6 +245,13 @@ public interface Config {
   boolean showOwnStats();
 
   /**
+   * Gets whether to show quit messages
+   *
+   * @return If quit messages are enabled
+   */
+  boolean showQuitMessages();
+
+  /**
    * Gets a format to override the server's "message of the day."
    *
    * <p>{0} = The existing MoTD.
