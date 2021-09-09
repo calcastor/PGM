@@ -825,8 +825,6 @@ public interface NMSHacks {
     Packet<?> teleport = teleportEntityPacket(player.getEntityId(), location);
 
     sendPacketToViewers(player, metadata);
-    sendPacketToViewers(player, useBed);
-    sendPacketToViewers(player, teleport);
   }
 
   static org.bukkit.enchantments.Enchantment getEnchantment(String key) {
