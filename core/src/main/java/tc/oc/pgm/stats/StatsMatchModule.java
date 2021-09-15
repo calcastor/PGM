@@ -2,7 +2,6 @@ package tc.oc.pgm.stats;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
-import static net.kyori.adventure.text.event.HoverEvent.showText;
 import static tc.oc.pgm.util.text.PlayerComponent.player;
 
 import com.google.common.collect.Lists;
@@ -65,7 +64,6 @@ import tc.oc.pgm.tracker.info.ProjectileInfo;
 import tc.oc.pgm.util.UsernameResolver;
 import tc.oc.pgm.util.named.NameStyle;
 import tc.oc.pgm.util.nms.NMSHacks;
-import tc.oc.pgm.util.text.TextFormatter;
 
 @ListenerScope(MatchScope.LOADED)
 public class StatsMatchModule implements MatchModule, Listener {
@@ -263,31 +261,31 @@ public class StatsMatchModule implements MatchModule, Listener {
     for (MatchPlayer viewer : match.getPlayers()) {
       if (viewer.getSettings().getValue(SettingKey.STATS) == SettingValue.STATS_OFF) continue;
 
-      viewer.sendMessage(
-          TextFormatter.horizontalLineHeading(
-              viewer.getBukkit(),
-              translatable("match.stats.title", NamedTextColor.YELLOW),
-              NamedTextColor.WHITE));
+      // viewer.sendMessage(
+      //     TextFormatter.horizontalLineHeading(
+      //         viewer.getBukkit(),
+      //         translatable("match.stats.title", NamedTextColor.YELLOW),
+      //         NamedTextColor.WHITE));
 
-      best.forEach(viewer::sendMessage);
+      // best.forEach(viewer::sendMessage);
 
-      PlayerStats stats = allPlayerStats.get(viewer.getId());
-      if (event.isShowOwn() && stats != null) {
-        Component ksHover =
-            translatable(
-                "match.stats.killstreak.concise",
-                numberComponent(stats.getKillstreak(), NamedTextColor.GREEN));
+      // PlayerStats stats = allPlayerStats.get(viewer.getId());
+      // if (event.isShowOwn() && stats != null) {
+      //   Component ksHover =
+      //       translatable(
+      //           "match.stats.killstreak.concise",
+      //           numberComponent(stats.getKillstreak(), NamedTextColor.GREEN));
 
-        viewer.sendMessage(
-            translatable(
-                "match.stats.own",
-                numberComponent(stats.getKills(), NamedTextColor.GREEN),
-                numberComponent(stats.getMaxKillstreak(), NamedTextColor.GREEN)
-                    .hoverEvent(showText(ksHover)),
-                numberComponent(stats.getDeaths(), NamedTextColor.RED),
-                numberComponent(stats.getKD(), NamedTextColor.GREEN),
-                damageComponent(stats.getDamageDone(), NamedTextColor.GREEN)));
-      }
+      //   viewer.sendMessage(
+      //       translatable(
+      //           "match.stats.own",
+      //           numberComponent(stats.getKills(), NamedTextColor.GREEN),
+      //           numberComponent(stats.getMaxKillstreak(), NamedTextColor.GREEN)
+      //               .hoverEvent(showText(ksHover)),
+      //           numberComponent(stats.getDeaths(), NamedTextColor.RED),
+      //           numberComponent(stats.getKD(), NamedTextColor.GREEN),
+      //           damageComponent(stats.getDamageDone(), NamedTextColor.GREEN)));
+      // }
 
       giveVerboseStatsItem(viewer, false);
     }
