@@ -72,7 +72,7 @@ public class PlayerStatsMenuItem implements MenuItem {
             "match.stats.damage.dealt",
             RESET,
             damageComponent(stats.getDamageDone(), NamedTextColor.GREEN),
-            damageComponent(stats.getBowDamage(), NamedTextColor.YELLOW));
+            damageComponent(stats.getBowDamageDone(), NamedTextColor.YELLOW));
     Component damageReceivedLore =
         translatable(
             "match.stats.damage.received",

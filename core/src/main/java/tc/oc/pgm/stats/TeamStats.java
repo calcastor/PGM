@@ -10,7 +10,7 @@ public class TeamStats {
   private int teamDeaths = 0;
   private double damageDone = 0;
   private double damageTaken = 0;
-  private double bowDamage = 0;
+  private double bowDamageDone = 0;
   private double bowDamageTaken = 0;
   private int shotsTaken = 0;
   private int shotsHit = 0;
@@ -26,7 +26,7 @@ public class TeamStats {
       teamDeaths += stats.getDeaths();
       damageDone += stats.getDamageDone();
       damageTaken += stats.getDamageTaken();
-      bowDamage += stats.getBowDamage();
+      bowDamageDone += stats.getBowDamageDone();
       bowDamageTaken += stats.getBowDamageTaken();
       shotsTaken += stats.getShotsTaken();
       shotsHit += stats.getShotsHit();
@@ -52,8 +52,8 @@ public class TeamStats {
     return damageTaken;
   }
 
-  public double getBowDamage() {
-    return bowDamage;
+  public double getBowDamageDone() {
+    return bowDamageDone;
   }
 
   public double getBowDamageTaken() {
