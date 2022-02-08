@@ -166,6 +166,7 @@ public interface MapInfo extends Comparable<MapInfo>, Cloneable {
     return idOrName == null
         ? ""
         : Normalizer.normalize(idOrName, Normalizer.Form.NFD)
+            .replaceAll(" ", "-")
             .replaceAll("[^A-Za-z0-9]", "")
             .toLowerCase();
   }
