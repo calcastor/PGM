@@ -22,7 +22,6 @@ public class SpreadPointProvider extends AggregatePointProvider {
   public Location getPoint(Match match, @Nullable Entity entity) {
     List<Location> bestPoints = new ArrayList<>(SAMPLE_COUNT);
     double bestDistance = Double.NEGATIVE_INFINITY;
-    MatchPlayer player = match.getPlayer(entity);
 
     for (int i = 0; i < SAMPLE_COUNT; i++) {
       for (PointProvider child : children) {
