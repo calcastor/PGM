@@ -32,9 +32,7 @@ public class SpreadPointProvider extends AggregatePointProvider {
         double nearest = Double.POSITIVE_INFINITY;
 
         for (MatchPlayer enemy : match.getParticipants()) {
-          if (enemy.isParticipating()
-              && !enemy.isDead()
-              && (player == null || player.getParty() != enemy.getParty())) {
+          if (enemy.isParticipating() && !enemy.isDead()) {
             nearest = Math.min(nearest, pos.distanceSquared(enemy.getBukkit().getLocation()));
           }
         }
