@@ -305,6 +305,19 @@ public class BlockTransformListener implements Listener {
         newState.setRawData((byte) 0);
       }
 
+      // For some reason, the newState has the data value of the old source.
+      // This corrects for that manually.
+      if (isWater(newState.getType()) || isLava(newState.getType())) {
+        byte oldData = newState.getRawData();
+        if (event.getFace() == BlockFace.DOWN) {
+          newState.setRawData((byte) (8));
+        } else if (oldData < 7) {
+          newState.setRawData((byte) (oldData + 1));
+        } else {
+          newState.setRawData((byte) (1));
+        }
+      }
+
       // Check for lava ownership
       this.callEvent(event, oldState, newState, Trackers.getOwner(event.getBlock()));
     }
