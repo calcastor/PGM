@@ -416,6 +416,8 @@ public class ChatDispatcher implements Listener {
                 event.getRecipients().stream()
                     .map(Audience::get)
                     .forEach(player -> player.sendMessage(identity(sender.getId()), componentMsg));
+
+                Audience.console().sendMessage(identity(sender.getId()), componentMsg);
               });
       return;
     }
