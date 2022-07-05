@@ -6,6 +6,7 @@ public enum ScoreCause {
   FLAG_CAPTURE,
   FLAG_NET_CAPTURE,
   FLAG_TICK,
+  FILTER,
   KILL,
   SCOREBOX
 }

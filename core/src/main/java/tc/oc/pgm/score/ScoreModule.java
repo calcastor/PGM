@@ -38,12 +38,17 @@ public class ScoreModule implements MapModule {
       new MapTag("tdm", "deathmatch", "Deathmatch", true, false);
   private static final MapTag BOX_TAG = new MapTag("scorebox", "Scorebox", false, true);
 
-  public ScoreModule(@Nonnull ScoreConfig config, @Nonnull Set<ScoreBoxFactory> scoreBoxFactories) {
+  public ScoreModule(
+      @Nonnull ScoreConfig config,
+      @Nonnull Set<ScoreBoxFactory> scoreBoxFactories,
+      @Nonnull Set<ScoreOnFilterFactory> scoreOnFilterFactories) {
     Preconditions.checkNotNull(config, "score config");
     Preconditions.checkNotNull(scoreBoxFactories, "score box factories");
+    Preconditions.checkNotNull(scoreOnFilterFactories, "score on filter factories");
 
     this.config = config;
     this.scoreBoxFactories = scoreBoxFactories;
+    this.scoreOnFilterFactories = scoreOnFilterFactories;
   }
 
   @Override
@@ -61,11 +66,17 @@ public class ScoreModule implements MapModule {
       scoreBoxes.add(factory.createScoreBox(match));
     }
 
-    return new ScoreMatchModule(match, this.config, scoreBoxes.build());
+    ImmutableSet.Builder<ScoreOnFilter> scoreOnFilters = ImmutableSet.builder();
+    for (ScoreOnFilterFactory factory : this.scoreOnFilterFactories) {
+      scoreOnFilters.add(factory.createScoreOnFilter(match));
+    }
+
+    return new ScoreMatchModule(match, this.config, scoreBoxes.build(), scoreOnFilters.build());
   }
 
   private final @Nonnull ScoreConfig config;
   private final @Nonnull Set<ScoreBoxFactory> scoreBoxFactories;
+  private final @Nonnull Set<ScoreOnFilterFactory> scoreOnFilterFactories;
 
   @Nonnull
   public ScoreConfig getConfig() {
@@ -74,8 +85,13 @@ public class ScoreModule implements MapModule {
 
   public static class Factory implements MapModuleFactory<ScoreModule> {
     @Override
+    public Collection<Class<? extends MapModule>> getHardDependencies() {
+      return ImmutableList.of(FilterModule.class);
+    }
+
+    @Override
     public Collection<Class<? extends MapModule>> getSoftDependencies() {
-      return ImmutableList.of(RegionModule.class, FilterModule.class);
+      return ImmutableList.of(RegionModule.class);
     }
 
     @Override
@@ -96,6 +112,7 @@ public class ScoreModule implements MapModule {
       RegionParser regionParser = factory.getRegions();
       ScoreConfig config = new ScoreConfig();
       ImmutableSet.Builder<ScoreBoxFactory> scoreBoxFactories = ImmutableSet.builder();
+      ImmutableSet.Builder<ScoreOnFilterFactory> scoreOnFilterFactories = ImmutableSet.builder();
 
       for (Element scoreEl : scoreElements) {
         config.scoreLimit = XMLUtils.parseNumber(scoreEl.getChild("limit"), Integer.class, -1);
@@ -112,6 +129,13 @@ public class ScoreModule implements MapModule {
         config.killScore =
             XMLUtils.parseNumber(
                 scoreEl.getChild("kills"), Integer.class, scoreKillsByDefault ? 1 : 0);
+
+        for (Element filterEl : scoreEl.getChildren("on")) {
+          Filter filter =
+              factory.getFilters().parseFilterProperty(filterEl, "filter", StaticFilter.ALLOW);
+          double score = XMLUtils.parseNumber(filterEl.getAttribute("score"), Integer.class, 1);
+          scoreOnFilterFactories.add(new ScoreOnFilterFactory(filter, score));
+        }
 
         for (Element scoreBoxEl : scoreEl.getChildren("box")) {
           int points =
@@ -146,7 +170,7 @@ public class ScoreModule implements MapModule {
                   region, points, filter, ImmutableMap.copyOf(redeemables), silent));
         }
       }
-      return new ScoreModule(config, scoreBoxFactories.build());
+      return new ScoreModule(config, scoreBoxFactories.build(), scoreOnFilterFactories.build());
     }
   }
 }
