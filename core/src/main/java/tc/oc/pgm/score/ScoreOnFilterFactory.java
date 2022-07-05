@@ -7,13 +7,15 @@ public class ScoreOnFilterFactory {
 
   protected final Filter trigger;
   protected final double score;
+  protected final ScoreOnFilterType type;
 
-  public ScoreOnFilterFactory(Filter trigger, double score) {
+  public ScoreOnFilterFactory(Filter trigger, double score, ScoreOnFilterType type) {
     this.trigger = trigger;
     this.score = score;
+    this.type = type;
   }
 
   public ScoreOnFilter createScoreOnFilter(Match match) {
-    return new ScoreOnFilter(trigger, score);
+    return new ScoreOnFilter(trigger, score, type);
   }
 }

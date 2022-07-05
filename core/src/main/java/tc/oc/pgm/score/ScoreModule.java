@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -131,10 +133,33 @@ public class ScoreModule implements MapModule {
                 scoreEl.getChild("kills"), Integer.class, scoreKillsByDefault ? 1 : 0);
 
         for (Element filterEl : scoreEl.getChildren("on")) {
-          Filter filter =
-              factory.getFilters().parseFilterProperty(filterEl, "filter", StaticFilter.ALLOW);
+          Filter teamFilter = factory.getFilters().parseFilterProperty(filterEl, "team");
+          Filter playerFilter = factory.getFilters().parseFilterProperty(filterEl, "player");
+
+          if (teamFilter != null && playerFilter != null) {
+            throw new InvalidXMLException(
+                "Cannot combine 'team' and 'player' properties", filterEl);
+          }
+
+          Filter finalFilter =
+              Stream.of(playerFilter, teamFilter)
+                  .filter(Objects::nonNull)
+                  .findFirst()
+                  .orElseThrow(
+                      () ->
+                          new InvalidXMLException(
+                              "Score on filter must have a 'team' or a 'player' property",
+                              filterEl));
+
+          ScoreOnFilterType type;
+          if (teamFilter != null) {
+            type = ScoreOnFilterType.TEAM;
+          } else {
+            type = ScoreOnFilterType.PLAYER;
+          }
+
           double score = XMLUtils.parseNumber(filterEl.getAttribute("score"), Integer.class, 1);
-          scoreOnFilterFactories.add(new ScoreOnFilterFactory(filter, score));
+          scoreOnFilterFactories.add(new ScoreOnFilterFactory(finalFilter, score, type));
         }
 
         for (Element scoreBoxEl : scoreEl.getChildren("box")) {
