@@ -16,16 +16,19 @@ import tc.oc.pgm.util.MethodParsers;
 import tc.oc.pgm.util.XMLParser;
 import tc.oc.pgm.util.xml.InvalidXMLException;
 import tc.oc.pgm.util.xml.Node;
+import tc.oc.pgm.util.xml.XMLFluentParser;
 import tc.oc.pgm.util.xml.XMLUtils;
 
 public abstract class RegionParser implements XMLParser<Region, RegionDefinition> {
 
   protected final Map<String, Method> methodParsers;
   protected final MapFactory factory;
+  protected final XMLFluentParser parser;
 
   public RegionParser(MapFactory factory) {
     this.factory = factory;
     this.methodParsers = MethodParsers.getMethodParsersForClass(getClass());
+    this.parser = factory.getParser();
   }
 
   @Override
@@ -289,6 +292,16 @@ public abstract class RegionParser implements XMLParser<Region, RegionDefinition
     Vector origin = XMLUtils.parseVector(el.getAttribute("origin"), new Vector());
 
     return new MirroredRegion(this.parseChildren(el), origin, normal);
+  }
+
+  @MethodParser("resize")
+  public ResizedRegion parseResize(Element el) throws InvalidXMLException {
+    Region child = this.parseChildren(el);
+    Vector min = parser.vector(el, "min").attr().required();
+    Vector max = parser.vector(el, "max").attr().required();
+    boolean relative = parser.parseBool(el, "relative").attr().orFalse();
+    validate(child, BlockBoundedValidation.INSTANCE, new Node(el));
+    return new ResizedRegion(child, min, max, relative);
   }
 
   @MethodParser("everywhere")
