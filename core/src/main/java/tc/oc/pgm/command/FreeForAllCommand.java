@@ -13,8 +13,8 @@ import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.Permission;
 import tc.oc.pgm.api.Permissions;
 import tc.oc.pgm.api.match.Match;
+import tc.oc.pgm.channels.ChatManager;
 import tc.oc.pgm.ffa.FreeForAllMatchModule;
-import tc.oc.pgm.listeners.ChatDispatcher;
 import tc.oc.pgm.util.named.NameStyle;
 import tc.oc.pgm.util.text.TextParser;
 
@@ -86,12 +86,10 @@ public final class FreeForAllCommand {
   }
 
   private void sendResizedMessage(Match match, CommandSender sender, String type, int value) {
-    ChatDispatcher.broadcastAdminChatMessage(
-        translatable(
-            "match.resize.announce." + type,
-            player(sender, NameStyle.FANCY),
-            translatable("match.info.players", NamedTextColor.YELLOW),
-            text(value, NamedTextColor.AQUA)),
-        match);
+    ChatManager.broadcastAdminMessage(translatable(
+        "match.resize.announce." + type,
+        player(sender, NameStyle.FANCY),
+        translatable("match.info.players", NamedTextColor.YELLOW),
+        text(value, NamedTextColor.AQUA)));
   }
 }

@@ -17,7 +17,7 @@ import org.incendo.cloud.annotations.Permission;
 import tc.oc.pgm.api.Permissions;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.party.VictoryCondition;
-import tc.oc.pgm.listeners.ChatDispatcher;
+import tc.oc.pgm.channels.ChatManager;
 import tc.oc.pgm.timelimit.TimeLimit;
 import tc.oc.pgm.timelimit.TimeLimitMatchModule;
 import tc.oc.pgm.util.named.NameStyle;
@@ -38,23 +38,20 @@ public final class TimeLimitCommand {
       @Argument("max-overtime") Duration maxOvertime,
       @Argument("end-overtime") Duration endOvertime) {
     time.cancel();
-    time.setTimeLimit(
-        new TimeLimit(
-            null,
-            duration.isNegative() ? Duration.ZERO : duration,
-            overtime,
-            maxOvertime,
-            endOvertime,
-            result.orElse(null),
-            true));
+    time.setTimeLimit(new TimeLimit(
+        null,
+        duration.isNegative() ? Duration.ZERO : duration,
+        overtime,
+        maxOvertime,
+        endOvertime,
+        result.orElse(null),
+        true));
     time.start();
 
-    ChatDispatcher.broadcastAdminChatMessage(
-        translatable(
-            "match.timeLimit.announce.commandOutput",
-            player(sender, NameStyle.FANCY),
-            clock(duration).color(NamedTextColor.AQUA),
-            result.map(r -> r.getDescription(match)).orElse(translatable("misc.unknown"))),
-        match);
+    ChatManager.broadcastAdminMessage(translatable(
+        "match.timeLimit.announce.commandOutput",
+        player(sender, NameStyle.FANCY),
+        clock(duration).color(NamedTextColor.AQUA),
+        result.map(r -> r.getDescription(match)).orElse(translatable("misc.unknown"))));
   }
 }

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.modules.PlayerTimeMatchModule;
 import tc.oc.pgm.util.Aliased;
@@ -20,12 +21,12 @@ import tc.oc.pgm.util.material.Materials;
  * @see SettingValue
  */
 public enum SettingKey implements Aliased {
-  CHAT(
-      "chat",
-      Materials.SIGN,
-      CHAT_TEAM,
-      CHAT_GLOBAL,
-      CHAT_ADMIN), // Changes the default chat channel
+  CHAT("chat", Materials.SIGN, CHAT_TEAM, CHAT_GLOBAL, CHAT_ADMIN) {
+    @Override
+    public void update(MatchPlayer player) {
+      PGM.get().getChatManager().setChannel(player, player.getSettings().getValue(CHAT));
+    }
+  }, // Changes the default chat channel
   DEATH(
       Arrays.asList("death", "dms"),
       Materials.SKULL,
@@ -87,7 +88,6 @@ public enum SettingKey implements Aliased {
       PlayerTimeMatchModule.updatePlayerTime(player);
     }
   }; // Changes player preference for time of day
-  ;
 
   private final List<String> aliases;
   private final SettingValue[] values;
