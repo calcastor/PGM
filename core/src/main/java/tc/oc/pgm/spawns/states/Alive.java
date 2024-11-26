@@ -17,6 +17,7 @@ import tc.oc.pgm.api.player.event.MatchPlayerDeathEvent;
 import tc.oc.pgm.classes.ClassMatchModule;
 import tc.oc.pgm.events.PlayerJoinPartyEvent;
 import tc.oc.pgm.killreward.KillRewardMatchModule;
+import tc.oc.pgm.kits.Kit;
 import tc.oc.pgm.modules.ItemKeepMatchModule;
 import tc.oc.pgm.spawns.Spawn;
 import tc.oc.pgm.spawns.SpawnMatchModule;
@@ -69,6 +70,11 @@ public class Alive extends Participating {
     player.resetVisibility();
     player.setGameMode(GameMode.SURVIVAL);
     bukkit.setAllowFlight(false);
+
+    // Apply player kit
+    for (Kit kit : smm.getPlayerKits()) {
+      player.applyKit(kit, false);
+    }
 
     // Apply spawn kit
     spawn.applyKit(player);

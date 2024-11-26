@@ -45,6 +45,7 @@ import tc.oc.pgm.events.PlayerJoinPartyEvent;
 import tc.oc.pgm.events.PlayerParticipationStopEvent;
 import tc.oc.pgm.events.PlayerPartyChangeEvent;
 import tc.oc.pgm.join.JoinRequest;
+import tc.oc.pgm.kits.Kit;
 import tc.oc.pgm.spawns.states.Joining;
 import tc.oc.pgm.spawns.states.Observing;
 import tc.oc.pgm.spawns.states.State;
@@ -93,6 +94,10 @@ public class SpawnMatchModule implements MatchModule, Listener, Tickable {
 
   public List<Spawn> getSpawns() {
     return module.spawns;
+  }
+
+  public List<Kit> getPlayerKits() {
+    return module.playerKits;
   }
 
   public ObserverToolFactory getObserverToolFactory() {
