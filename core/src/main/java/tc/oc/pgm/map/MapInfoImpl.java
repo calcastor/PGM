@@ -375,7 +375,7 @@ public class MapInfoImpl implements MapInfo {
       if (variantEl == null) {
         this.variantId = DEFAULT_VARIANT;
         this.mapName = name;
-        this.world = null;
+        this.world = assertNotNull(root).getChildTextNormalize("world");
       } else {
         this.variantId = XMLUtils.parseRequiredId(variantEl);
         if (DEFAULT_VARIANT.equals(variantId))
