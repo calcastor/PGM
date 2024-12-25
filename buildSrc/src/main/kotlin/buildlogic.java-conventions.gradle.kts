@@ -22,8 +22,8 @@ repositories {
 
 dependencies {
     api("org.jdom:jdom2:2.0.6.1")
-    api("net.kyori:adventure-api:4.17.0")
-    api("net.kyori:adventure-text-serializer-plain:4.17.0")
+    api("net.kyori:adventure-api:4.18.0")
+    api("net.kyori:adventure-text-serializer-plain:4.18.0")
     api("net.kyori:adventure-platform-bukkit:4.3.4")
     api("org.incendo:cloud-core:2.0.0")
     api("org.incendo:cloud-annotations:2.0.0")
