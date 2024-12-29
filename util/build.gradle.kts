@@ -1,5 +1,6 @@
 plugins {
     id("buildlogic.java-conventions")
+    `maven-publish`
 }
 
 dependencies {
@@ -15,6 +16,26 @@ sourceSets {
                 "src/main/resources",
                 "src/main/i18n/templates",
                 "src/main/i18n/translations")
+        }
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("pgm") {
+        groupId = project.group as String
+        artifactId = project.name
+        version = project.version as String
+
+        artifact(tasks["jar"])
+    }
+    repositories {
+        maven {
+            name = "ghPackages"
+            url = uri("https://maven.pkg.github.com/PGMDev/PGM")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
