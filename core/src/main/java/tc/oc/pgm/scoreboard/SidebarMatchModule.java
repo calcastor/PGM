@@ -55,6 +55,7 @@ import tc.oc.pgm.util.TimeUtils;
 import tc.oc.pgm.util.bukkit.ViaUtils;
 import tc.oc.pgm.util.concurrent.RateLimiter;
 import tc.oc.pgm.util.event.player.PlayerLocaleChangeEvent;
+import tc.oc.pgm.util.platform.Platform;
 
 @ListenerScope(MatchScope.LOADED)
 public class SidebarMatchModule implements MatchModule, Listener {
@@ -97,7 +98,9 @@ public class SidebarMatchModule implements MatchModule, Listener {
     FastBoard sidebar = new FastBoard(player.getBukkit()) {
       @Override
       public boolean hasLinesMaxLength() {
-        return player.getProtocolVersion() < ViaUtils.VERSION_1_13;
+        return (Platform.isModern())
+            ? player.getProtocolVersion() < ViaUtils.VERSION_1_13
+            : super.hasLinesMaxLength();
       }
     };
     // Only render the title once, since it does not change during the match.
