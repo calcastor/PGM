@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -30,6 +29,9 @@ public class BlockTransformEvent extends GeneralizedEvent {
 
   // FIXME: Orthogonal concern from block drops module, remove later
   private BlockDrops drops;
+
+  // Set when the platform knows a player is responsible, and the cause event alone cannot say so.
+  private boolean manual;
 
   public BlockTransformEvent(Event cause, Block block, BlockState oldState, BlockState newState) {
     super(assertNotNull(cause));
@@ -148,6 +150,8 @@ public class BlockTransformEvent extends GeneralizedEvent {
    * @return Whether the event is considered "manual."
    */
   public final boolean isManual() {
+    if (manual) return true;
+
     final Event event = getCause();
 
     if (event instanceof BlockPlaceEvent
@@ -155,19 +159,17 @@ public class BlockTransformEvent extends GeneralizedEvent {
         || event instanceof PlayerBucketEmptyEvent
         || event instanceof PlayerBucketFillEvent) return true;
 
-    if (event instanceof BlockIgniteEvent igniteEvent) {
-      if (igniteEvent.getCause() == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL
-          && igniteEvent.getIgnitingEntity() != null) {
-        return true;
-      }
-    }
-
-    if (event instanceof ExplosionPrimeByEntityEvent
-        && ((ExplosionPrimeByEntityEvent) event).getPrimer() instanceof Player) {
+    if (event instanceof ExplosionPrimeByEntityEvent explosionPrimeByEntityEvent
+        && explosionPrimeByEntityEvent.getPrimer() instanceof Player) {
       return true;
     }
 
     return false;
+  }
+
+  /** Mark the transform event as "manual", that being player-caused */
+  public final void markManual() {
+    this.manual = true;
   }
 
   @Deprecated
